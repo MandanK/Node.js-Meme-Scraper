@@ -1,11 +1,11 @@
+import fs from 'node:fs';
+import https from 'node:https';
 import crawler from 'crawler';
-import fs from 'fs';
-import https from 'https';
 
 function saveImageToDisk(url, localPath) {
   const fullUrl = url;
   const file = fs.createWriteStream(localPath);
-  const request = https.get(url, function (response) {
+  https.get(fullUrl, function (response) {
     response.pipe(file);
   });
 }
@@ -26,15 +26,13 @@ const c = new crawler({
       const images = res.$('img');
       images.each((index) => {
         if (pictureCounter < maxNumberOfPictures) {
-          {
-            // here you can save the file or save them in an array to download them later
+          // here you can save the file or save them in an array to download them later
 
-            saveImageToDisk(
-              images[index].attribs.src,
-              localFolderAddress + (pictureCounter + 1) + '.jpg',
-            );
-            pictureCounter++;
-          }
+          saveImageToDisk(
+            images[index].attribs.src,
+            localFolderAddress + (pictureCounter + 1) + '.jpg',
+          );
+          pictureCounter++;
         }
       });
     }
